@@ -1,16 +1,7 @@
-TextField(
-  controller: _taskController,
-  decoration: InputDecoration(
-    labelText: 'Enter a task',
-    border: OutlineInputBorder(),
+// File: lib/main.dart
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => CompletedTasksScreen(completedTasks: _completedTasks),
   ),
-),
-ElevatedButton(
-  onPressed: () {
-    if (_taskController.text.isNotEmpty) {
-      _addTask(_taskController.text);
-      _taskController.clear();
-    }
-  },
-  child: Text('Add Task'),
-),
+);
