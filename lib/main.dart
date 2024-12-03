@@ -1,4 +1,4 @@
-
+// File: lib/main.dart
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class TaskManager extends StatefulWidget {
   @override
   _TaskManagerState createState() => _TaskManagerState();
@@ -26,6 +25,7 @@ class TaskManager extends StatefulWidget {
 class _TaskManagerState extends State<TaskManager> {
   final List<String> _tasks = [];
   final List<String> _completedTasks = [];
+  final TextEditingController _taskController = TextEditingController(); // Add controller
 
   // Add a task to the list
   void _addTask(String task) {
@@ -50,16 +50,28 @@ class _TaskManagerState extends State<TaskManager> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onSubmitted: (value) {
-                if (value.isNotEmpty) {
-                  _addTask(value);
-                }
-              },
-              decoration: const InputDecoration(
-                labelText: 'Enter a task',
-                border: OutlineInputBorder(),
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _taskController, // Use the controller here
+                    decoration: const InputDecoration(
+                      labelText: 'Enter a task',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_taskController.text.isNotEmpty) {
+                      _addTask(_taskController.text);
+                      _taskController.clear();
+                    }
+                  },
+                  child: const Text('Add Task'),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -83,4 +95,3 @@ class _TaskManagerState extends State<TaskManager> {
     );
   }
 }
- 
