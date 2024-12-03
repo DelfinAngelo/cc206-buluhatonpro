@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 class CompletedTasksScreen extends StatelessWidget {
   final List<String> completedTasks;
 
