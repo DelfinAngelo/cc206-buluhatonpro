@@ -1,5 +1,5 @@
-// File: lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,11 +27,28 @@ class _TaskManagerState extends State<TaskManager> {
   final List<String> _completedTasks = [];
   final TextEditingController _taskController = TextEditingController();
 
+  
+  void _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _tasks.addAll(prefs.getStringList('tasks') ?? []);
+      _completedTasks.addAll(prefs.getStringList('completedTasks') ?? []);
+    });
+  }
+
+  
+  void _saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('tasks', _tasks);
+    prefs.setStringList('completedTasks', _completedTasks);
+  }
+
   // Add a task to the list
   void _addTask(String task) {
-    setState(() {
+    setState(() { 
       _tasks.add(task);
     });
+    _saveTasks(); // Save updated tasks
   }
 
   // Mark a task as completed
@@ -40,6 +57,13 @@ class _TaskManagerState extends State<TaskManager> {
       _completedTasks.add(_tasks[index]);
       _tasks.removeAt(index);
     });
+    _saveTasks(); // Save updated tasks
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks(); // Load tasks on app startup
   }
 
   @override
@@ -52,7 +76,7 @@ class _TaskManagerState extends State<TaskManager> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buluhaton Pro - Task Manager'),
+        title: const Text('Buluhaton Pro'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list_alt),
