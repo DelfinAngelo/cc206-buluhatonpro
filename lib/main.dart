@@ -25,7 +25,7 @@ class TaskManager extends StatefulWidget {
 class _TaskManagerState extends State<TaskManager> {
   final List<String> _tasks = [];
   final List<String> _completedTasks = [];
-  final TextEditingController _taskController = TextEditingController(); // Add controller
+  final TextEditingController _taskController = TextEditingController();
 
   // Add a task to the list
   void _addTask(String task) {
@@ -43,9 +43,31 @@ class _TaskManagerState extends State<TaskManager> {
   }
 
   @override
+  void dispose() {
+    _taskController.dispose(); // Dispose controller to free up resources
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Buluhaton Pro - Task Manager')),
+      appBar: AppBar(
+        title: const Text('Buluhaton Pro - Task Manager'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list_alt),
+            onPressed: () {
+              // Navigate to Completed Tasks screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CompletedTasksScreen(completedTasks: _completedTasks),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -54,7 +76,7 @@ class _TaskManagerState extends State<TaskManager> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _taskController, // Use the controller here
+                    controller: _taskController,
                     decoration: const InputDecoration(
                       labelText: 'Enter a task',
                       border: OutlineInputBorder(),
@@ -92,6 +114,33 @@ class _TaskManagerState extends State<TaskManager> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CompletedTasksScreen extends StatelessWidget {
+  final List<String> completedTasks;
+
+  const CompletedTasksScreen({super.key, required this.completedTasks});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Completed Tasks'),
+      ),
+      body: completedTasks.isEmpty
+          ? const Center(
+              child: Text('No tasks completed yet!'),
+            )
+          : ListView.builder(
+              itemCount: completedTasks.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(completedTasks[index]),
+                );
+              },
+            ),
     );
   }
 }
