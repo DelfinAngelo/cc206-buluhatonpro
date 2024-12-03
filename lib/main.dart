@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Buluhaton Pro - Task Manager',
       theme: ThemeData(
-        fontFamily: 'Poppins', // Set global font
+        fontFamily: 'Consolas', 
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontSize: 18, color: Colors.black), // Replaced bodyText1 with bodyLarge
-          bodyMedium: TextStyle(fontSize: 16), // Replaced bodyText2 with bodyMedium
+          bodyLarge: TextStyle(fontSize: 18, color: Colors.black), 
+          bodyMedium: TextStyle(fontSize: 16), 
         ),
       ),
       home: const TaskManager(),
@@ -70,7 +70,7 @@ class _TaskManagerState extends State<TaskManager> {
                   labelText: 'Enter a task',
                   border: OutlineInputBorder(),
                 ),
-                style: theme.bodyLarge?.copyWith(fontFamily: 'Poppins'), // Replaced bodyText1 with bodyLarge
+                style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'), // Replaced bodyText1 with bodyLarge
               ),
             ),
             ElevatedButton(
@@ -89,7 +89,7 @@ class _TaskManagerState extends State<TaskManager> {
                   return ListTile(
                     title: Text(
                       _tasks[index],
-                      style: theme.bodyLarge, // Replaced bodyText1 with bodyLarge
+                      style: theme.bodyLarge, 
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.check),
