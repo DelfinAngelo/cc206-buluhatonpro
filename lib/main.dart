@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'completed_tasks_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Buluhaton Pro - Task Manager',
       theme: ThemeData(
-        fontFamily: 'Consolas', 
+        fontFamily: 'Consolas',
         textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontSize: 18, color: Colors.black), 
-          bodyMedium: TextStyle(fontSize: 16), 
+          bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
+          bodyMedium: TextStyle(fontSize: 16),
         ),
       ),
       home: const TaskManager(),
@@ -50,6 +50,12 @@ class _TaskManagerState extends State<TaskManager> {
     });
   }
 
+  void _clearCompletedTasks() {
+    setState(() {
+      _completedTasks.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -57,6 +63,20 @@ class _TaskManagerState extends State<TaskManager> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buluhaton Pro - Task Manager'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.list_alt),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CompletedTasksScreen(
+                completedTasks: _completedTasks,
+                onClearTasks: _clearCompletedTasks,
+              ),
+            ),
+          );
+        },
       ),
       body: Center(
         child: Column(
@@ -70,7 +90,7 @@ class _TaskManagerState extends State<TaskManager> {
                   labelText: 'Enter a task',
                   border: OutlineInputBorder(),
                 ),
-                style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'), // Replaced bodyText1 with bodyLarge
+                style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'),
               ),
             ),
             ElevatedButton(
@@ -89,7 +109,7 @@ class _TaskManagerState extends State<TaskManager> {
                   return ListTile(
                     title: Text(
                       _tasks[index],
-                      style: theme.bodyLarge, 
+                      style: theme.bodyLarge,
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.check),
