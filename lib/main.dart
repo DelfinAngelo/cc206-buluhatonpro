@@ -10,7 +10,7 @@ body: Center(
           labelText: 'Enter a task',
           border: OutlineInputBorder(),
         ),
-        style: theme.bodyText1?.copyWith(fontFamily: 'Poppins'),
+        style: theme.bodyText1?.copyWith(fontFamily: 'Consolas'),
       ),
       ...
     ],
