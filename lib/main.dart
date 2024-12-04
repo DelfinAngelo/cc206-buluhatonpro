@@ -92,6 +92,22 @@ class _TaskManagerState extends State<TaskManager> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
 
+body: Center(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      TextField(
+        controller: _taskController,
+        decoration: const InputDecoration(
+          labelText: 'Enter a task',
+          border: OutlineInputBorder(),
+        ),
+        style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'),
+      ),
+      ...
+    ],
+  ),
+);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buluhaton Pro - Task Manager'),
