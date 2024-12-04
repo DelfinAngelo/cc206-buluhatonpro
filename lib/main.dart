@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'completed_tasks_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart'; 
+
 void main() {
   runApp(const MyApp());
 }
@@ -36,10 +38,38 @@ class _TaskManagerState extends State<TaskManager> {
   final List<Map<String, String>> _completedTasks = [];
   final TextEditingController _taskController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  void _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _tasks.addAll(prefs.getStringList('tasks') ?? []);
+      final completedList = prefs.getStringList('completedTasks') ?? [];
+      _completedTasks.clear();
+      _completedTasks.addAll(completedList.map((task) {
+        final taskParts = task.split('|');
+        return {'task': taskParts[0], 'time': taskParts[1]};
+      }).toList());
+    });
+  }
+
+  void _saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('tasks', _tasks);
+    prefs.setStringList('completedTasks', _completedTasks
+        .map((task) => '${task['task']}|${task['time']}')
+        .toList());
+  }
+
   void _addTask(String task) {
     setState(() {
       _tasks.add(task);
     });
+    _saveTasks();  // Save tasks after adding
   }
 
   void _markTaskCompleted(int index) {
@@ -48,12 +78,14 @@ class _TaskManagerState extends State<TaskManager> {
       _completedTasks.add({'task': _tasks[index], 'time': currentTime});
       _tasks.removeAt(index);
     });
+    _saveTasks();  // Save tasks after marking completed
   }
 
   void _clearCompletedTasks() {
     setState(() {
       _completedTasks.clear();
     });
+    _saveTasks();  // Save tasks after clearing completed tasks
   }
 
   @override
