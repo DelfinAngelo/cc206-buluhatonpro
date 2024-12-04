@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'completed_tasks_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Consolas',
         textTheme: const TextTheme(
           bodyLarge: TextStyle(fontSize: 18, color: Colors.black),
-          bodyMedium: TextStyle(fontSize: 16),
+          bodyMedium: TextStyle(fontSize: 14),
         ),
       ),
       home: const TaskManager(),
@@ -69,7 +69,7 @@ class _TaskManagerState extends State<TaskManager> {
     setState(() {
       _tasks.add(task);
     });
-    _saveTasks();  // Save tasks after adding
+    _saveTasks();
   }
 
   void _markTaskCompleted(int index) {
@@ -78,98 +78,98 @@ class _TaskManagerState extends State<TaskManager> {
       _completedTasks.add({'task': _tasks[index], 'time': currentTime});
       _tasks.removeAt(index);
     });
-    _saveTasks();  // Save tasks after marking completed
+    _saveTasks();
   }
 
   void _clearCompletedTasks() {
     setState(() {
       _completedTasks.clear();
     });
-    _saveTasks();  // Save tasks after clearing completed tasks
+    _saveTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
 
-body: Center(
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      TextField(
-        controller: _taskController,
-        decoration: const InputDecoration(
-          labelText: 'Enter a task',
-          border: OutlineInputBorder(),
-        ),
-        style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'),
-      ),
-      ...
-    ],
-  ),
-);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Buluhaton Pro - Task Manager'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue.shade300, Colors.blue.shade800],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _taskController,
+                    decoration: const InputDecoration(
+                      labelText: 'Enter a task',
+                      border: OutlineInputBorder(),
+                    ),
+                    style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_taskController.text.isNotEmpty) {
+                      _addTask(_taskController.text);
+                      _taskController.clear();
+                    }
+                  },
+                  child: const Text('Add Task'),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _tasks.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                          _tasks[index],
+                          style: theme.bodyLarge,
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.check),
+                          onPressed: () => _markTaskCompleted(index),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.list_alt),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CompletedTasksScreen(
-                completedTasks: _completedTasks,
-                onClearTasks: _clearCompletedTasks,
-              ),
-            ),
-          );
-        },
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _taskController,
-                decoration: const InputDecoration(
-                  labelText: 'Enter a task',
-                  border: OutlineInputBorder(),
-                ),
-                style: theme.bodyLarge?.copyWith(fontFamily: 'Consolas'),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_taskController.text.isNotEmpty) {
-                  _addTask(_taskController.text);
-                  _taskController.clear();
-                }
-              },
-              child: const Text('Add Task'),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _tasks.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      _tasks[index],
-                      style: theme.bodyLarge,
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.check),
-                      onPressed: () => _markTaskCompleted(index),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CompletedTasksScreen(
+          completedTasks: _completedTasks,
+          onClearTasks: _clearCompletedTasks,
         ),
       ),
     );
+  },
+  child: const Icon(Icons.list_alt),
+),
+      );
   }
 }
